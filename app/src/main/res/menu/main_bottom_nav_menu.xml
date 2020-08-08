@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menuUsersList"
+        android:title="@string/main_menu_title_users_list"
+        android:icon="@drawable/ic_user_dark"/>
+    <item
+        android:id="@+id/menuMore"
+        android:title="@string/main_menu_title_more"
+        android:icon="@drawable/ic_more_dark"/>
+    <item
+        android:id="@+id/menuSettings"
+        android:title="@string/main_menu_title_settings"
+        android:icon="@drawable/ic_settings_dark"/>
+</menu>

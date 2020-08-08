@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Пользователи GitHub</string>
+
+    <string name="main_menu_title_users_list">Пользователи</string>
+    <string name="main_menu_title_more">Ещё</string>
+    <string name="main_menu_title_settings">Настройки</string>
+
+    <string name="fragment_users_title">Пользователи</string>
+    <string name="fragment_user_title">Пользователь</string>
+    <string name="fragment_user_login_title">Логин</string>
+    <string name="fragment_user_name_title">Имя</string>
+    <string name="fragment_user_html">Линк на сайт пользователя</string>
+    <string name="fragment_user_location_title">Местоположение</string>
+    <string name="fragment_user_followers_count">Количество читающих</string>
+    <string name="fragment_user_following_count">Количество последователей</string>
+    <string name="fragment_more_title">Ещё</string>
+    <string name="fragment_settings_title">Настройки</string>
+
+    <string name="users_synchronize">Синхронизировать</string>
+    <string name="root_sync_message_error">Ошибка синхронизации</string>
+</resources>

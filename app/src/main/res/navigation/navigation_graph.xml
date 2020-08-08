@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/menuUsersList">
+
+    <fragment
+        android:id="@+id/menuUsersList"
+        android:name="studio.bz_soft.githubusers.ui.users.UsersFragment"
+        android:label="@string/fragment_users_title"
+        tools:layout="@layout/fragment_users" >
+        <action
+            android:id="@+id/action_usersFragment_to_userInfoFragment"
+            app:destination="@id/userInfoFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/userInfoFragment"
+        android:name="studio.bz_soft.githubusers.ui.users.user.UserInfoFragment"
+        android:label="@string/fragment_user_title"
+        tools:layout="@layout/fragment_user_info" />
+    <fragment
+        android:id="@+id/menuMore"
+        android:name="studio.bz_soft.githubusers.ui.more.MoreFragment"
+        android:label="@string/fragment_more_title"
+        tools:layout="@layout/fragment_more"/>
+    <fragment
+        android:id="@+id/menuSettings"
+        android:name="studio.bz_soft.githubusers.ui.settings.SettingsFragment"
+        android:label="@string/fragment_settings_title"
+        tools:layout="@layout/fragment_settings" />
+</navigation>
