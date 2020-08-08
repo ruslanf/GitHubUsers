@@ -1,2 +1,2 @@
 # GitHubUsers
-Small exmple project thats help to understand MVVM
+Small example project thats help to understand MVVM
