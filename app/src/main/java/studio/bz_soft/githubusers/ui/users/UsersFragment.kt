@@ -62,13 +62,17 @@ class UsersFragment : Fragment(), CoroutineScope {
             swipeRefresh.setOnRefreshListener { refreshListener(this) }
             usersListVM.progress.observe(viewLifecycleOwner, Observer { render(it) })
             usersListVM.usersList.observe(viewLifecycleOwner, Observer { renderUsersList(it) })
-            launch(SupervisorJob(job) + Dispatchers.IO) { usersListVM.fetchUsers() }
+            fetchUsers()
         }
     }
 
     override fun onResume() {
         super.onResume()
         (activity as RootActivity).mainBottomNavigationMenu.visibility = View.VISIBLE
+    }
+
+    private fun fetchUsers() {
+        launch(SupervisorJob(job) + Dispatchers.IO) { usersListVM.fetchUsers() }
     }
 
     private fun renderUsersList(users: List<Users>) {
@@ -83,7 +87,7 @@ class UsersFragment : Fragment(), CoroutineScope {
 
     private fun refreshListener(v: View) {
         v.apply {
-            launch(SupervisorJob(job) + Dispatchers.IO) { usersListVM.fetchUsers() }
+            fetchUsers()
             swipeRefresh.isRefreshing = false
         }
     }
