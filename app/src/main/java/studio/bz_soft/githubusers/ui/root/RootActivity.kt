@@ -4,26 +4,22 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuBuilder
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import kotlinx.android.synthetic.main.activity_root.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.android.inject
 import studio.bz_soft.githubusers.R
 import studio.bz_soft.githubusers.data.models.vm.UsersListVM
-import kotlin.coroutines.CoroutineContext
+import studio.bz_soft.githubusers.databinding.ActivityRootBinding
+import studio.bz_soft.githubusers.root.showProgressBar
 
-class RootActivity : AppCompatActivity(), CoroutineScope {
-
-    private var job = Job()
-    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + job
+@ExperimentalCoroutinesApi
+class RootActivity : AppCompatActivity() {
 
     private val usersListVM by inject<UsersListVM>()
 
@@ -32,10 +28,11 @@ class RootActivity : AppCompatActivity(), CoroutineScope {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_NoActionBar)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_root)
-        setSupportActionBar(toolbar)
+        val binding = ActivityRootBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
-        initialize()
+        initialize(binding)
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -43,7 +40,7 @@ class RootActivity : AppCompatActivity(), CoroutineScope {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        mainBottomNavigationMenu.setupWithNavController(navController)
+       binding. mainBottomNavigationMenu.setupWithNavController(navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -66,18 +63,11 @@ class RootActivity : AppCompatActivity(), CoroutineScope {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun initialize() {
-        usersListVM.progress.observe(this, Observer { render(it) })
+    private fun initialize(binding: ActivityRootBinding) {
+        usersListVM.progress.observe(this) { binding.progressBar.showProgressBar(it) }
     }
 
     private fun syncButtonListener() {
-        launch(SupervisorJob(job) + Dispatchers.IO) { usersListVM.fetchUsers() }
-    }
-
-    private fun render(progress: Int) {
-        progressBar.visibility = when (progress > 0) {
-            true -> View.VISIBLE
-            false -> View.GONE
-        }
+        usersListVM.fetchUsers()
     }
 }

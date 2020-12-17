@@ -1,6 +1,7 @@
 package studio.bz_soft.githubusers.data.repository
 
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 import org.koin.core.KoinComponent
 import studio.bz_soft.githubusers.data.db.DbClient
 import studio.bz_soft.githubusers.data.http.ApiClient
@@ -51,6 +52,8 @@ class RepositoryImpl(
 
     override suspend fun getAllUsers(): Either<Exception, List<Users>> =
         safeRequest { database.getAllFromUsers() }
+
+    override fun watchUsers(): Flow<List<Users>> = database.watchUsers()
 
     // User
     override suspend fun insertUser(user: User): Either<Exception, Unit> =

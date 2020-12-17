@@ -2,6 +2,7 @@ package studio.bz_soft.githubusers.data.db
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 import studio.bz_soft.githubusers.data.models.db.User
 import studio.bz_soft.githubusers.data.models.db.Users
 
@@ -24,6 +25,8 @@ class DbClientImpl(application: Application) : DbClient {
     }
 
     override fun getAllUsers(): LiveData<List<Users>> = usersDao.getAllUsers()
+
+    override fun watchUsers(): Flow<List<Users>> = usersDao.watchUsers()
 
     override suspend fun getAllFromUsers(): List<Users> = usersDao.getAllFromUsers()
 

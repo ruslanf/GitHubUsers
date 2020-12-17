@@ -2,6 +2,12 @@ package studio.bz_soft.githubusers.data.models.vm
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import studio.bz_soft.githubusers.data.http.Left
 import studio.bz_soft.githubusers.data.http.Right
 import studio.bz_soft.githubusers.data.models.UsersModel
@@ -9,6 +15,7 @@ import studio.bz_soft.githubusers.data.models.db.Users
 import studio.bz_soft.githubusers.data.repository.Repository
 import studio.bz_soft.githubusers.root.event.Event
 
+@ExperimentalCoroutinesApi
 class UsersListVM(
     private val repository: Repository
 ) : ViewModel() {
@@ -17,17 +24,31 @@ class UsersListVM(
     val errors = MutableLiveData<Event<Exception>>()
 
     val usersList = MutableLiveData<List<Users>>()
+
+    val watchUsersList: StateFlow<List<Users>> get() = _usersList
+
+    private val _usersList = MutableStateFlow<List<Users>>(listOf())
+
     private var counter = 0
 
-    suspend fun fetchUsers() {
-        counter += 1
-        progress.postValue(counter)
-        when (val r = repository.getUsersList()) {
-            is Right -> { saveUsers(r.value) }
-            is Left -> errors.value = Event(r.value)
+    init {
+        fetchUsers()
+        viewModelScope.launch {
+            launch { repository.watchUsers().collect { _usersList.value = it } }
         }
-        counter -= 1
-        progress.postValue(counter)
+    }
+
+    fun fetchUsers() {
+        viewModelScope.launch {
+            counter += 1
+            progress.postValue(counter)
+            when (val r = repository.getUsersList()) {
+                is Right -> saveUsers(r.value)
+                is Left -> errors.value = Event(r.value)
+            }
+            counter -= 1
+            progress.postValue(counter)
+        }
     }
 
     private suspend fun saveUsers(found: List<UsersModel>) {

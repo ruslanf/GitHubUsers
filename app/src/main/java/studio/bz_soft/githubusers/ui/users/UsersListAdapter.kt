@@ -3,13 +3,12 @@ package studio.bz_soft.githubusers.ui.users
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import coil.api.load
-import coil.transform.CircleCropTransformation
-import kotlinx.android.synthetic.main.cell_users.view.*
 import studio.bz_soft.githubusers.R
 import studio.bz_soft.githubusers.data.models.db.Users
+import studio.bz_soft.githubusers.databinding.CellUsersBinding
 import studio.bz_soft.githubusers.root.delegated.AdapterDelegateInterface
 import studio.bz_soft.githubusers.root.delegated.BaseHolder
+import studio.bz_soft.githubusers.root.showImage
 
 sealed class UsersListElement {
     data class UsersListItem(val users: Users): UsersListElement()
@@ -19,17 +18,13 @@ class CompaniesItemHolder(v: View, val onClick: (Users) -> Unit): BaseHolder<Use
 
     override fun bindModel(item: UsersListElement) {
         super.bindModel(item)
-        when (item) {
-            is UsersListElement.UsersListItem -> itemView.apply {
-                val image = "${item.users.avatar}?w=360"
-                userIV.load(image) {
-                    size(64)
-                    placeholder(R.drawable.ic_no_user_light)
-                    fallback(R.drawable.ic_no_user_light)
-                    transformations(CircleCropTransformation())
+        CellUsersBinding.bind(itemView).apply {
+            when (item) {
+                is UsersListElement.UsersListItem -> itemView.apply {
+                    showImage(userIV, "${item.users.avatar}?w=360")
+                    userTitleTV.text = item.users.userName
+                    setOnClickListener { onClick(item.users) }
                 }
-                userTitleTV.text = item.users.userName
-                setOnClickListener { onClick(item.users) }
             }
         }
     }
@@ -38,17 +33,15 @@ class CompaniesItemHolder(v: View, val onClick: (Users) -> Unit): BaseHolder<Use
 class UsersListItemDelegate(private val onClick: (Users) -> Unit):
     AdapterDelegateInterface<UsersListElement> {
 
-    override fun isForViewType(items: List<UsersListElement>, position: Int): Boolean {
-        return items[position] is UsersListElement.UsersListItem
-    }
+    override fun isForViewType(items: List<UsersListElement>, position: Int): Boolean =
+        items[position] is UsersListElement.UsersListItem
 
-    override fun createViewHolder(parent: ViewGroup): BaseHolder<UsersListElement> {
-        return CompaniesItemHolder(
+    override fun createViewHolder(parent: ViewGroup): BaseHolder<UsersListElement> =
+        CompaniesItemHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.cell_users, parent, false),
             onClick
         )
-    }
 
     override fun bindViewHolder(items: List<UsersListElement>, position: Int, holder: BaseHolder<UsersListElement>) {
         holder.bindModel(items[position])

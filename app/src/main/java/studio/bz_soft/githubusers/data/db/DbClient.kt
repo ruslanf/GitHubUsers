@@ -2,6 +2,7 @@ package studio.bz_soft.githubusers.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.flow.Flow
 import studio.bz_soft.githubusers.data.models.db.User
 import studio.bz_soft.githubusers.data.models.db.Users
 
@@ -14,6 +15,7 @@ interface DbClient {
     suspend fun getListAllUsers(): List<Users>
     suspend fun getUsersRecords(userId: String): List<Users>
     suspend fun getUsersRecord(userId: String): Users
+    fun watchUsers(): Flow<List<Users>>
 
     suspend fun insertUser(user: User)
     suspend fun deleteUser(user: User)

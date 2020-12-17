@@ -1,6 +1,7 @@
 package studio.bz_soft.githubusers.data.repository
 
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 import studio.bz_soft.githubusers.data.http.Either
 import studio.bz_soft.githubusers.data.models.UserModel
 import studio.bz_soft.githubusers.data.models.UsersModel
@@ -18,6 +19,7 @@ interface Repository {
     fun getAllFromUsers(): LiveData<List<Users>>
     suspend fun getListAllUsers(): List<Users>
     suspend fun getUsersRecords(userId: String): List<Users>
+    fun watchUsers(): Flow<List<Users>>
 
     suspend fun getUsersRecord(userId: String): Users
     suspend fun getListUsersRecords(listIDs: List<String>): List<Users>
